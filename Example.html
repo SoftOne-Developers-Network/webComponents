@@ -1,0 +1,128 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<style>
+		table {
+		  border-collapse: collapse;
+		  border: 1px solid black;
+		  table-layout: fixed;
+		  width: 680px;  
+		} 
+
+		th,td {
+		  border: 1px solid black;
+		}
+	</style>	
+    <script type="text/javascript" src="XCon.js"></script>
+	<script type="text/javascript" >
+	
+	var curTrdr = 0;
+	
+	function getData()
+	{
+		var command = {
+			LOCATEINFO : "CUSTOMER:TRDR,CODE,NAME"
+		};
+		XCon.getData(this, JSON.stringify(command), function(scope, resp){ 
+		    var obj= JSON.parse(resp);
+			if ((obj.success) && (obj.data) && (obj.data.CUSTOMER) && (obj.data.CUSTOMER.length>0)){
+				document.getElementById("code").value = obj.data.CUSTOMER[0].CODE;
+				document.getElementById("name").value = obj.data.CUSTOMER[0].NAME;
+				curTrdr = obj.data.CUSTOMER[0].TRDR;
+			}
+		});  
+	}	
+  
+	function theCallBackFunc(scope, eventName)
+	{
+		document.getElementById("debug").innerHTML=eventName;
+		getData();
+		
+		/*
+		eventName
+		'AFTER_INSERT'  
+		'AFTER_LOCATE'  
+		'AFTER_POST'    
+		'AFTER_DELETE'  
+		'AFTER_CANCEL'  
+		*/
+	}
+
+	function setup()
+	{
+		XCon.setOnDataChange(this, theCallBackFunc);
+	}
+
+	function UpdateData()
+	{
+		var command = {
+			data :{
+				CUSTOMER : [
+				{
+				  CODE : document.getElementById("code").value,
+				  NAME : document.getElementById("name").value
+				}
+				]
+			}
+		};
+		XCon.setData(this, JSON.stringify(command), function(scope, resp){ 
+		    var obj= JSON.parse(resp);
+			if (obj.success){
+				document.getElementById("debug").innerHTML= 'Data updated! (SET)';
+			}
+		});  
+	}
+
+
+    function newSalDoc(){
+		XCon.openurl("xcmd:SALDOC&list=SOne&form=SOne&fv=SALDOC.TRDR:"+curTrdr+"&ae=2");
+	}
+	
+    function newCfnDoc(){
+		XCon.openurl("xcmd:CFNCUSDOC&list=SOne&form=SOne&fv=CFNCUSDOC.TRDR:"+curTrdr+"&ae=2");
+	}
+
+	function viewCusStm(){
+		XCon.openurl("xcmd:CUST_STM&list=SOne&ff=CUSTOMER.TRDR:"+curTrdr+"&ae=1");
+	}
+	
+	function viewSite(){
+		XCon.openurl("https://www.softone.gr");
+	}
+
+</script> 
+</head>
+
+<body onload="setup();">    
+  <h1>Web Component Simple example</h1>        
+  <div style="margin-right:15px; display:inline-block">
+  Code: <input id="code" type="text" name="code" onblur="UpdateData()" style="width:200px;">
+  </div>
+  <div style="margin-right:15px; display:inline-block">
+  Name: <input id="name" type="text" name="name" onblur="UpdateData()" style="width:550px;">
+  </div>
+  <div>
+  <h2>Relative Jobs</h2>        
+  </div>
+  <div>
+  <table>
+  <tr>
+  <td>
+     <a id="myLink" href="#" onclick="newSalDoc();">New Sale</a>
+  </td>
+  <td>
+    <a id="myLink" href="#" onclick="newCfnDoc();">New Collection</a>
+  </td>
+  <td>
+    <a id="myLink" href="#" onclick="viewCusStm();">Customer Statement</a>
+  </td>
+  <td>
+    <a id="myLink" href="#" onclick="viewSite();">SoftOne Site</a>
+  </td>
+  </tr>
+  </table>
+  </div>
+  <hr>
+  <div id="debug">Debug area</div>
+</body>
+</html>
