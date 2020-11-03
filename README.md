@@ -11,4 +11,5 @@ Include script :
 1. XCon.setOnDataChange(scope, CallBackFunc);
 2. XCon.getData(scope, command, CallBackFunc);
 3. XCon.setData(scope, command, CallBackFunc);
-4. XCon.openurl(command)
+4. XCon.openurl(command);
+5. XCon.WSCall(scope, uri_path, raw_json_data, CallBackFunc); 
