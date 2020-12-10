@@ -1,0 +1,50 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<script type="text/javascript" src="https://s1sites01.blob.core.windows.net/lib/webcomponents/xcon.js"></script>
+	<script type="text/javascript">
+		
+		/*****************************XCon***********************************/
+		
+
+		function theCallBackFunc(scope, eventName) {
+			wsCall();
+			//if ((eventName=='LOCATE') || (eventName=='POST') || (eventName=='INSERT'))
+		}
+
+		function setup() {
+			XCon.setOnDataChange(this, theCallBackFunc);
+			wsCall()
+		}
+		
+		function wsCall(){
+			var scope =  this;
+			var data  = {},
+				rawData = JSON.stringify(data),
+				url = '/s1services/js/gbd.wscall/wscall';
+				
+			XCon.WSCALL(scope, url,rawData,function(sc, res){
+				
+				var responseFromServer = JSON.parse(res);
+				if(responseFromServer.data){
+					document.getElementById('result').innerHTML = responseFromServer["data"]["data"]["NAME"];
+				}
+				else{
+					document.getElementById('result').innerHTML = responseFromServer["NAME"];
+				}
+				
+			})
+		}
+
+	</script>
+</head>
+
+<body onload="setup();">
+	<div id="result">
+	
+	</div>
+</body>
+
+</html>
