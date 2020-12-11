@@ -5,7 +5,7 @@
 Λειτουργούν με τον ίδιο τρόπο τόσο μέσα στο Soft1 όσο και στο S360.
 
 Include script : 
-<script type="text/javascript" src="XCon.js"></script>
+<script type="text/javascript" src="https://s1sites01.blob.core.windows.net/lib/webcomponents/xcon.js"></script>
 
 Μέθοδοι : 
 1. XCon.setOnDataChange(scope, CallBackFunc);
